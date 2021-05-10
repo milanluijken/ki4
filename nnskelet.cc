@@ -87,6 +87,14 @@ double gprime (double x, int type) {
   return 0;
 }//gprime
 
+//return double tussen -1 en 1
+double randnumber (){
+    double randgetal = (double)rand() / RAND_MAX; // random getal tussen 0 en 1
+    if(rand() % 2 == 0) //maak in 50% van de gevallen negatief
+      randgetal *= -1;
+    return randgetal;
+}//randnumber
+
 int main (int argc, char* argv[ ]) {
 
   int inputs, hiddens;            // aantal invoer- en verborgen knopen
@@ -149,13 +157,20 @@ int main (int argc, char* argv[ ]) {
   //TODO-1 initialiseer de gewichten random tussen -1 en 1: 
   // inputtohidden en hiddentooutput
   // rand ( ) levert geheel randomgetal tussen 0 en RAND_MAX; denk aan casten
+  for(int i = 0; i <= hiddens; i++){
+    hiddentooutput[i] = randnumber();
+    for(int j = 0; j<= inputs; j++)
+      inputtohidden[i][j] = randnumber();
+  }//for
 
-  for ( cnt = 1; cnt <= epochs; cnt++ ) {
+  double totaalfout = 0;
+
+  for ( cnt = 1; cnt <= epochs; cnt++ ){
 
     //TODO-2 lees voorbeeld in naar input/target, of genereer ter plekke:
     // als voorbeeld: de XOR-functie, waarvoor geldt dat inputs = 2
-    // int x = rand ( ) % 2; int y = rand ( ) % 2; int dexor = ( x + y ) % 2;
-    // input[1] = x; input[2] = y; target = dexor;
+    int x = rand ( ) % 2; int y = rand ( ) % 2; int dexor = ( x + y ) % 2;
+    input[1] = x; input[2] = y; target = dexor;
     
     //LATER TODO-7 Abalone, met inputs = 8:
     // int mysample = rand ( ) % SAMPLES;
@@ -165,13 +180,52 @@ int main (int argc, char* argv[ ]) {
     
     //TODO-3 stuur het voorbeeld door het netwerk
     // reken inhidden's uit, acthidden's, inoutput en netoutput
+    //inhidden
+    for(int j = 0; j <= hiddens; j++){// som 0->inputs Wl,j*xl
+      double sum = 0;
+      for(int l = 0; l <= inputs; l++){
+        sum+= inputtohidden[l][j] * input[l];
+      }//for
+      inhidden[j] = sum;
+    }//for
+
+    //achthidden
+    for(int j = 1; j <= hiddens; j++){
+      acthidden[j] = g(inhidden[j], type);
+    }//for
+
+    //inoutpot
+    inoutput = 0;
+    for(int l = 0; l <= hiddens; l++) //som 0->hiddens wl*al    
+      inoutput += hiddentooutput[l] * acthidden[l];
+
+    //netoutput
+    netoutput = g(inoutput, type);
 
     //TODO-4 bereken error, delta, en deltahidden
+    error = target - netoutput;
 
-    //TODO-5 update gewichten hiddentooutput en inputtohidden
+    delta = gprime(error, type);
+
+    for(int j = 1; j <= hiddens; j++)
+      deltahidden[j] = gprime(inhidden[j], type) * hiddentooutput[j] * delta;
     
+    //TODO-5 update gewichten hiddentooutput en inputtohidden
+    for(int j = 0; j <= hiddens; j++)
+      hiddentooutput[j] = hiddentooutput[j] + (ALPHA * acthidden[j] * delta);
+    
+    for(int k = 0; k <= inputs; k++)
+      for(int j = 1; j <= hiddens; j++)
+        inputtohidden[k][j] = inputtohidden[k][j] + (ALPHA * input[k] * deltahidden[j]);
+
     //TODO-6 beoordeel het netwerk en rapporteer 
     // bijvoorbeeld (totaal)fout bij laatste 1000 voorbeelden
+    totaalfout += error;
+
+    if(cnt % 1000 == 0){ //elke 1000 testen
+      cout << totaalfout << endl;
+      totaalfout = 0;
+    }//if
 
   }//for
 

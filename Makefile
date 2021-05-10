@@ -1,2 +1,2 @@
-all: ki4
-	g++ -Wall -Wextra -O2 -o ki4 ki4.cc
+all: nn
+	g++ -Wall -O2 -o nn nnskelet.cc
