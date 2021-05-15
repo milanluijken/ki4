@@ -77,8 +77,7 @@ ab153list.pop()
 ###-zet om naar floats en maak list voor x as-###
 
 count = []
-i = 0
-for element in xor51list:
+for i in range(len(xor51list)):
     xor51list[i] = float(xor51list[i])
     xor52list[i] = float(xor52list[i])
     xor53list[i] = float(xor53list[i])
@@ -91,44 +90,41 @@ for element in xor51list:
     ab151list[i] = float(ab151list[i])
     ab152list[i] = float(ab152list[i])
     ab153list[i] = float(ab153list[i])    
-    i+=1
-    count.append(i)
+    count.append(i+1)
 
-###-verwijder eerste 100 elementen-###############
+####################################################
 
-xor51list = xor51list[100:]
-xor52list = xor52list[100:]
-xor53list = xor53list[100:]
-xor151list = xor151list[100:]
-xor152list = xor152list[100:]
-xor153list = xor153list[100:]
-
-ab51list = ab51list[100:]
-ab52list = ab52list[100:]
-ab53list = ab53list[100:]
-ab151list = ab151list[100:]
-ab152list = ab152list[100:]
-ab153list = ab153list[100:]
-
-count = count[100:]
+    newxor51list = xor51list[3:]
+    newxor52list = xor52list[3:]
+    newxor53list = xor53list[3:]
+    newxor151list = xor151list[3:]
+    newxor152list = xor152list[3:]
+    newxor153list = xor153list[3:]
+    newab51list = ab51list[3:]
+    newab52list = ab52list[3:]
+    newab53list = ab53list[3:]
+    newab151list = ab151list[3:]
+    newab152list = ab152list[3:]
+    newab153list = ab153list[3:]
+    newcount = count[3:]
 
 ###-grafiek-########################################
 
-plt.scatter(count, ab52list, s=1, label = "5 knopen")
+plt.plot(newcount, newxor53list, label = "5 knopen")
 
-plt.scatter(count, ab152list, s=1, label = "15 knopen")
+plt.plot(newcount, newxor153list, label = "15 knopen")
 
 # naming the x axis
-plt.xlabel('epochs (* 10^3)')
+plt.xlabel('epochs (* 10^5)')
 
 # naming the y axis
-plt.ylabel('error^2')
+plt.ylabel('som error^2 laatste 10^5 epochs')
 
 # giving a title to my graph
-plt.title('Abalone leren met functie-type 2, 5 en 15 hidden knopen')
+plt.title('Xor leren met functie-type 3, 5 en 15 hidden knopen')
   
 # show a legend on the plot
 plt.legend()
   
 # function to show the plot
-plt.show()
+plt.savefig('graphs/xor3')

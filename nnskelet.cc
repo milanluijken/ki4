@@ -225,7 +225,7 @@ int main (int argc, char* argv[ ]) {
     // bijvoorbeeld (totaal)fout bij laatste 1000 voorbeelden
     totaalfout += error * error;
 
-    if(cnt % 1000 == 0){ //elke 1000 testen
+    if(cnt % 100000 == 0){ //elke 100000 testen
       cout << totaalfout << endl;
       totaalfout = 0;
     }//if
